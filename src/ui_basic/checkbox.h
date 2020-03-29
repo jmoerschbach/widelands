@@ -71,6 +71,7 @@ struct Statebox : public Panel {
 	void handle_mousein(bool inside) override;
 	bool handle_mousepress(uint8_t btn, int32_t x, int32_t y) override;
 	bool handle_mousemove(uint8_t, int32_t, int32_t, int32_t, int32_t) override;
+	bool handle_key(bool down, SDL_Keysym code) override;
 
 private:
 	void layout() override;

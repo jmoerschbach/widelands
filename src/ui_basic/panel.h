@@ -362,6 +362,8 @@ private:
 	bool do_key(bool down, SDL_Keysym code);
 	bool do_textinput(const std::string& text);
 	bool do_tooltip();
+	Panel* next_to_focus(Panel* p);
+	Panel* prev_to_focus(Panel* p);
 
 	static Panel* ui_trackmouse(int32_t& x, int32_t& y);
 	static bool ui_mousepress(const uint8_t button, int32_t x, int32_t y);

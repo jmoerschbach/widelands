@@ -64,6 +64,7 @@ private:
 	}
 	// Play click
 	bool handle_mousepress(uint8_t, int32_t, int32_t) override;
+	bool handle_key(bool const down, SDL_Keysym const code) override;
 
 	TabPanel* parent;
 	uint32_t id;
@@ -112,6 +113,7 @@ struct TabPanel : public Panel {
 	const TabList& tabs() const;
 	void activate(uint32_t idx);
 	void activate(const std::string&);
+	void activate_next(uint32_t idx);
 	uint32_t active() {
 		return active_;
 	}

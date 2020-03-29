@@ -592,13 +592,25 @@ bool Panel::handle_mousemove(const uint8_t, int32_t, int32_t, int32_t, int32_t) 
 	return !tooltip_.empty();
 }
 
+Panel* Panel::next_to_focus(Panel* p) {
+	if (p == last_child_) {
+		return first_child_;
+	}
+	return p->next_;
+}
+
+Panel* Panel::prev_to_focus(Panel* p) {
+	if (p == first_child_) {
+		return last_child_;
+	}
+	return p->prev_;
+}
+
 bool Panel::handle_key(bool down, SDL_Keysym code) {
 	if (down) {
+		const bool shift = (code.mod & KMOD_LSHIFT) || (code.mod & KMOD_LSHIFT);
 		if (focus_) {
-			Panel* p = focus_->next_;
-			if (focus_ == last_child_) {
-				p = first_child_;
-			}
+			Panel* p = shift ? next_to_focus(focus_) : prev_to_focus(focus_);
 
 			switch (code.sym) {
 
@@ -608,10 +620,10 @@ bool Panel::handle_key(bool down, SDL_Keysym code) {
 						p->focus();
 						break;
 					}
-					if (p == last_child_) {
-						p = first_child_;
+					if (!shift) {
+						p = next_to_focus(p);
 					} else {
-						p = p->next_;
+						p = prev_to_focus(p);
 					}
 				}
 				return true;

@@ -62,7 +62,8 @@ Button::Button  //  Common constructor
      style_(&g_gr->styles().button_style(init_style)) {
 	set_thinks(false);
 	// Don't allow focus
-	assert(!get_can_focus());
+	//		assert(!get_can_focus());
+	set_can_focus(true);
 }
 
 /// For textual buttons. If h = 0, h will resize according to the font's height. If both h = 0 and w
@@ -181,7 +182,8 @@ void Button::draw(RenderTarget& dst) {
 	                     (!enabled_ && static_cast<int>(disable_style_ & ButtonDisableStyle::kFlat));
 	const bool is_permpressed =
 	   (enabled_ && visual_state_ == VisualState::kPermpressed) ||
-	   (!enabled_ && static_cast<int>(disable_style_ & ButtonDisableStyle::kPermpressed));
+	   (!enabled_ && static_cast<int>(disable_style_ & ButtonDisableStyle::kPermpressed)) ||
+	   has_focus();
 	const bool is_monochrome =
 	   !enabled_ && static_cast<int>(disable_style_ & ButtonDisableStyle::kMonochrome);
 
@@ -371,7 +373,33 @@ bool Button::handle_mouserelease(uint8_t const btn, int32_t, int32_t) {
 bool Button::handle_mousemove(const uint8_t, int32_t, int32_t, int32_t, int32_t) {
 	return true;  // We handle this always by lighting up
 }
+/**
+ * Handle keypress/release events
+ */
+bool Button::handle_key(bool const down, SDL_Keysym const code) {
+	if (down) {
+		switch (code.sym) {
 
+		case SDLK_TAB:
+			// Let the panel handle the tab key
+			return get_parent()->handle_key(true, code);
+		case SDLK_KP_ENTER:
+		case SDLK_RETURN:
+			// if (highlighted_ && enabled_) {
+			play_click();
+			sigclicked();
+			//  The button may not exist at this point (for example if the button
+			//  closed the dialog that it is part of). So member variables may no
+			//  longer be accessed.
+			//}
+			return true;
+
+		default:
+			break;
+		}
+	}
+	return false;
+}
 void Button::set_visual_state(UI::Button::VisualState input_state) {
 	visual_state_ = input_state;
 }

@@ -64,6 +64,7 @@ Statebox::Statebox(Panel* const parent,
      rendered_text_(nullptr),
      label_text_(label_text) {
 	set_flags(Has_Text, !label_text_.empty());
+	set_can_focus(true);
 	layout();
 }
 
@@ -187,6 +188,26 @@ bool Statebox::handle_mousepress(const uint8_t btn, int32_t, int32_t) {
 
 bool Statebox::handle_mousemove(const uint8_t, int32_t, int32_t, int32_t, int32_t) {
 	return true;  // We handle this always by lighting up
+}
+
+bool Statebox::handle_key(bool down, SDL_Keysym code) {
+	if (down) {
+		switch (code.sym) {
+
+		case SDLK_TAB:
+			// Let the panel handle the tab key
+			return get_parent()->handle_key(true, code);
+		case SDLK_KP_ENTER:
+		case SDLK_RETURN:
+		case SDLK_SPACE:
+		case SDLK_KP_SPACE:
+			if (flags_ & Is_Enabled) {
+				button_clicked();
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 /**

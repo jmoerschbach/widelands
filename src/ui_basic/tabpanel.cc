@@ -66,6 +66,7 @@ Tab::Tab(TabPanel* const tab_parent,
 		set_size(std::max(kTabPanelButtonHeight, rendered_title->width() + 2 * kTabPanelTextMargin),
 		         kTabPanelButtonHeight);
 	}
+	set_can_focus(true);
 }
 
 /**
@@ -76,6 +77,21 @@ bool Tab::active() {
 }
 void Tab::activate() {
 	return parent->activate(id);
+}
+
+/**
+ * Handle keypress/release events
+ */
+bool Tab::handle_key(bool const down, SDL_Keysym const code) {
+	if (down) {
+		switch (code.sym) {
+
+		case SDLK_TAB:
+			parent->activate_next(id);
+			return true;
+		}
+	}
+	return false;
 }
 
 bool Tab::handle_mousepress(uint8_t, int32_t, int32_t) {
@@ -207,6 +223,7 @@ void TabPanel::activate(uint32_t idx) {
 	}
 	if (idx < tabs_.size()) {
 		tabs_[idx]->panel->set_visible(true);
+		tabs_[idx]->focus();
 	}
 
 	active_ = idx;
@@ -221,6 +238,10 @@ void TabPanel::activate(const std::string& name) {
 			activate(t);
 		}
 	}
+}
+
+void TabPanel::activate_next(uint32_t idx) {
+	activate((++idx) % tabs_.size());
 }
 
 /**
