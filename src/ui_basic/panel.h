@@ -264,6 +264,7 @@ public:
 		return (get_can_focus() && parent_->focus_ == this);
 	}
 	virtual void focus(bool topcaller = true);
+	virtual void unfocus();
 
 	void set_top_on_click(bool const on) {
 		if (on)

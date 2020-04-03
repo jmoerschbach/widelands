@@ -373,11 +373,18 @@ bool Button::handle_mouserelease(uint8_t const btn, int32_t, int32_t) {
 bool Button::handle_mousemove(const uint8_t, int32_t, int32_t, int32_t, int32_t) {
 	return true;  // We handle this always by lighting up
 }
+
+void Button::focus(const bool) {
+	log("focus: Dropdown\n");
+	Panel::focus();
+}
 /**
  * Handle keypress/release events
  */
 bool Button::handle_key(bool const down, SDL_Keysym const code) {
+
 	if (down) {
+		log("handle_key: Button\n");
 		switch (code.sym) {
 
 		case SDLK_TAB:
@@ -385,13 +392,13 @@ bool Button::handle_key(bool const down, SDL_Keysym const code) {
 			return get_parent()->handle_key(true, code);
 		case SDLK_KP_ENTER:
 		case SDLK_RETURN:
-			// if (highlighted_ && enabled_) {
-			play_click();
-			sigclicked();
-			//  The button may not exist at this point (for example if the button
-			//  closed the dialog that it is part of). So member variables may no
-			//  longer be accessed.
-			//}
+			if (enabled_) {
+				play_click();
+				sigclicked();
+				//  The button may not exist at this point (for example if the button
+				//  closed the dialog that it is part of). So member variables may no
+				//  longer be accessed.
+			}
 			return true;
 
 		default:

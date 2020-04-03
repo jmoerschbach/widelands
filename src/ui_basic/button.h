@@ -102,6 +102,7 @@ public:
 
 	void set_pic(const Image* pic);
 	void set_title(const std::string&);
+	virtual void focus(const bool) override;
 	const std::string& get_title() const {
 		return title_;
 	}

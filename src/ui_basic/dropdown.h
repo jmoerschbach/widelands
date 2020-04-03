@@ -177,6 +177,8 @@ protected:
 	/// loses focus.
 	void think() override;
 
+	virtual void focus(const bool bla = true) override;
+
 private:
 	static void layout_if_alive(int);
 	void layout() override;

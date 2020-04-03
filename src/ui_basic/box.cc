@@ -142,7 +142,13 @@ bool Box::handle_mousewheel(uint32_t which, int32_t x, int32_t y) {
 	}
 	return Panel::handle_mousewheel(which, x, y);
 }
+
+void Box::focus(const bool) {
+	log("focus: Dropdown\n");
+	Panel::focus();
+}
 bool Box::handle_key(bool down, SDL_Keysym code) {
+	log("handle_key: Box\n");
 	if (scrollbar_) {
 		assert(scrolling_);
 		return scrollbar_->handle_key(down, code);

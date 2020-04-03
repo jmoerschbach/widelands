@@ -114,6 +114,7 @@ struct TabPanel : public Panel {
 	void activate(uint32_t idx);
 	void activate(const std::string&);
 	void activate_next(uint32_t idx);
+	void activate_prev(uint32_t idx);
 	uint32_t active() {
 		return active_;
 	}

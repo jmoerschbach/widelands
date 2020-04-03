@@ -133,6 +133,7 @@ BaseDropdown::BaseDropdown(UI::Panel* parent,
 	list_->set_visible(false);
 	button_box_.add(&display_button_, UI::Box::Resizing::kExpandBoth);
 	display_button_.sigclicked.connect(boost::bind(&BaseDropdown::toggle_list, this));
+	// display_button_.set_can_focus(false);
 	if (push_button_ != nullptr) {
 		display_button_.set_perm_pressed(true);
 		button_box_.add(push_button_, UI::Box::Resizing::kFullSize);
@@ -409,7 +410,14 @@ void BaseDropdown::set_list_visibility(bool open) {
 	set_layout_toplevel(list_->is_visible());
 }
 
+void BaseDropdown::focus(const bool) {
+	log("focus: Dropdown\n");
+	Panel::focus();
+}
+
 void BaseDropdown::toggle_list() {
+
+	log("toggle_list\n");
 	if (!is_enabled_) {
 		list_->set_visible(false);
 		return;
@@ -419,7 +427,10 @@ void BaseDropdown::toggle_list() {
 		display_button_.set_perm_pressed(list_->is_visible());
 	}
 	if (list_->is_visible()) {
+		log("focus\n");
 		list_->move_to_top();
+		display_button_.unfocus();
+		button_box_.unfocus();
 		focus();
 		Notifications::publish(NoteDropdown(id_));
 	}
@@ -441,12 +452,15 @@ bool BaseDropdown::is_mouse_away() const {
 }
 
 bool BaseDropdown::handle_key(bool down, SDL_Keysym code) {
+
 	if (down) {
+		log("handle_key: Dropdown\n");
 		switch (code.sym) {
 		case SDLK_KP_ENTER:
 		case SDLK_RETURN:
 			if (list_->is_visible()) {
 				set_value();
+				toggle_list();
 				return true;
 			}
 			break;

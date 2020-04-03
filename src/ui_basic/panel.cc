@@ -607,9 +607,12 @@ Panel* Panel::prev_to_focus(Panel* p) {
 }
 
 bool Panel::handle_key(bool down, SDL_Keysym code) {
+
 	if (down) {
+		log("handle_key: Panel\n");
 		const bool shift = (code.mod & KMOD_LSHIFT) || (code.mod & KMOD_LSHIFT);
 		if (focus_) {
+			log("handle_key: Panel actually with focused\n");
 			Panel* p = shift ? next_to_focus(focus_) : prev_to_focus(focus_);
 
 			switch (code.sym) {
@@ -620,7 +623,7 @@ bool Panel::handle_key(bool down, SDL_Keysym code) {
 						p->focus();
 						break;
 					}
-					if (!shift) {
+					if (shift) {
 						p = next_to_focus(p);
 					} else {
 						p = prev_to_focus(p);
@@ -720,6 +723,11 @@ void Panel::focus(const bool topcaller) {
 
 	parent_->focus_ = this;
 	parent_->focus(false);
+}
+
+void Panel::unfocus() {
+	log("unfocus: Panel\n");
+	parent_->focus_ = nullptr;
 }
 
 /**

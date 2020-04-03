@@ -51,6 +51,7 @@ Statebox::Statebox(Panel* const parent,
 	set_desired_size(w, h);
 	set_size(w, h);
 	set_flags(Has_Custom_Picture, true);
+	set_can_focus(flags_ & Is_Enabled);
 }
 
 Statebox::Statebox(Panel* const parent,
@@ -64,7 +65,7 @@ Statebox::Statebox(Panel* const parent,
      rendered_text_(nullptr),
      label_text_(label_text) {
 	set_flags(Has_Text, !label_text_.empty());
-	set_can_focus(true);
+	set_can_focus(flags_ & Is_Enabled);
 	layout();
 }
 
@@ -105,6 +106,7 @@ void Statebox::set_enabled(bool const enabled) {
 	}
 
 	set_flags(Is_Enabled, enabled);
+	set_can_focus((enabled));
 
 	if (!(flags_ & Has_Custom_Picture)) {
 		pic_graphics_ = g_gr->images().get(enabled ? "images/ui_basic/checkbox_light.png" :
@@ -161,7 +163,7 @@ void Statebox::draw(RenderTarget& dst) {
 		   image_anchor, pic_graphics_, Recti(Vector2i((flags_ & Is_Checked) ? kStateboxSize : 0, 0),
 		                                      kStateboxSize, kStateboxSize));
 
-		if (flags_ & Is_Highlighted) {
+		if (flags_ & Is_Highlighted || has_focus()) {
 			dst.draw_rect(
 			   Recti(image_anchor, kStateboxSize + 1, kStateboxSize + 1), RGBColor(100, 100, 80));
 		}

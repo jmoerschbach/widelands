@@ -84,11 +84,16 @@ void Tab::activate() {
  */
 bool Tab::handle_key(bool const down, SDL_Keysym const code) {
 	if (down) {
+		const bool shift = (code.mod & KMOD_LSHIFT) || (code.mod & KMOD_LSHIFT);
 		switch (code.sym) {
 
 		case SDLK_TAB:
-			parent->activate_next(id);
-			return true;
+			if (!shift) {
+				parent->activate_next(id);
+			} else {
+				parent->activate_prev(id);
+				return true;
+			}
 		}
 	}
 	return false;
@@ -242,6 +247,9 @@ void TabPanel::activate(const std::string& name) {
 
 void TabPanel::activate_next(uint32_t idx) {
 	activate((++idx) % tabs_.size());
+}
+void TabPanel::activate_prev(uint32_t idx) {
+	activate((idx == 0) ? tabs_.size() - 1 : --idx);
 }
 
 /**

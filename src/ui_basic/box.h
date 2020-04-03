@@ -67,6 +67,7 @@ struct Box : public Panel {
 	void set_inner_spacing(uint32_t size);
 	/// Sets the maximum dimensions and calls set_desired_size()
 	void set_max_size(int w, int h);
+	virtual void focus(const bool) override;
 
 protected:
 	void layout() override;
