@@ -92,8 +92,8 @@ bool Tab::handle_key(bool const down, SDL_Keysym const code) {
 				parent->activate_next(id);
 			} else {
 				parent->activate_prev(id);
-				return true;
 			}
+			return true;
 		}
 	}
 	return false;

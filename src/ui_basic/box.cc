@@ -44,6 +44,7 @@ Box::Box(Panel* const parent,
      orientation_(orientation),
      mindesiredbreadth_(0),
      inner_spacing_(inner_spacing) {
+	set_can_focus(true);
 }
 
 /**
@@ -144,7 +145,7 @@ bool Box::handle_mousewheel(uint32_t which, int32_t x, int32_t y) {
 }
 
 void Box::focus(const bool) {
-	log("focus: Dropdown\n");
+	log("got focus: Box (unnamed)\n");
 	Panel::focus();
 }
 bool Box::handle_key(bool down, SDL_Keysym code) {

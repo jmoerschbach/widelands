@@ -177,8 +177,6 @@ protected:
 	/// loses focus.
 	void think() override;
 
-	virtual void focus(const bool bla = true) override;
-
 private:
 	static void layout_if_alive(int);
 	void layout() override;
@@ -190,7 +188,7 @@ private:
 	void set_value();
 	/// Toggles the dropdown list on and off and sends a notification if the list is visible
 	/// afterwards.
-	void toggle_list();
+	void toggle_list_visiblity();
 	/// Toggle the list closed if the dropdown is currently expanded.
 	void close();
 
@@ -224,6 +222,7 @@ private:
 	bool is_enabled_;
 	ButtonStyle button_style_;
 	bool autoexpand_display_button_;
+	bool was_expanded_by_button;
 };
 
 /// A dropdown menu that lets the user select a value of the datatype 'Entry'.

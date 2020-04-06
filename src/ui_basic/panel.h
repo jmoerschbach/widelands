@@ -24,6 +24,7 @@
 #include <boost/signals2/signal.hpp>
 #include <boost/signals2/trackable.hpp>
 
+#include "base/log.h"
 #include "base/macros.h"
 #include "base/rect.h"
 #include "base/vector.h"
@@ -437,6 +438,11 @@ struct NamedPanel : public Panel {
 
 	const std::string& get_name() const {
 		return name_;
+	}
+
+	void focus(const bool topcaller = true) override {
+		log("got focus: %s\n", get_name().c_str());
+		Panel::focus(topcaller);
 	}
 
 private:

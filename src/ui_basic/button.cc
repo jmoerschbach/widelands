@@ -374,10 +374,6 @@ bool Button::handle_mousemove(const uint8_t, int32_t, int32_t, int32_t, int32_t)
 	return true;  // We handle this always by lighting up
 }
 
-void Button::focus(const bool) {
-	log("focus: Dropdown\n");
-	Panel::focus();
-}
 /**
  * Handle keypress/release events
  */

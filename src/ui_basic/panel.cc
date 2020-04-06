@@ -594,6 +594,14 @@ bool Panel::handle_mousemove(const uint8_t, int32_t, int32_t, int32_t, int32_t) 
 
 Panel* Panel::next_to_focus(Panel* p) {
 	if (p == last_child_) {
+		//		if (p->parent_) {
+		//			log("next_to_focus: has parent\n");
+		//			if (p->parent_->first_child_ != nullptr) {
+		//				log("next_to_focus: returning parent first child\n");
+		//				return p->parent_->first_child_;
+		//			}
+		//		}
+		log("next_to_focus: no parent\n");
 		return first_child_;
 	}
 	return p->next_;
@@ -601,6 +609,14 @@ Panel* Panel::next_to_focus(Panel* p) {
 
 Panel* Panel::prev_to_focus(Panel* p) {
 	if (p == first_child_) {
+		//		if (p->parent_) {
+		//			log("prev_to_focus: has parent\n");
+		//			if (p->parent_->last_child_ != nullptr) {
+		//				log("prev_to_focus: returning parent last child\n");
+		//				return p->parent_->last_child_;
+		//			}
+		//		}
+		log("prev_to_focus: no parent\n");
 		return last_child_;
 	}
 	return p->prev_;
@@ -623,7 +639,7 @@ bool Panel::handle_key(bool down, SDL_Keysym code) {
 						p->focus();
 						break;
 					}
-					if (shift) {
+					if (!shift) {
 						p = next_to_focus(p);
 					} else {
 						p = prev_to_focus(p);
