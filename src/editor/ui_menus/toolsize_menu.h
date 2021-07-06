@@ -23,6 +23,7 @@
 #include "ui_basic/button.h"
 #include "ui_basic/textarea.h"
 #include "ui_basic/unique_window.h"
+#include <ui_basic/spinbox.h>
 
 class EditorInteractive;
 
@@ -30,18 +31,18 @@ class EditorInteractive;
 struct EditorToolsizeMenu : public UI::UniqueWindow {
 	EditorToolsizeMenu(EditorInteractive&, UI::UniqueWindow::Registry&);
 	void update(uint32_t);
-	void set_buttons_enabled(bool enable);
+	void set_buttons_enabled(bool);
 	uint32_t value() {
 		return value_;
 	}
 
 private:
 	EditorInteractive& eia() const;
-	void decrease_radius();
-	void increase_radius();
 
-	UI::Textarea textarea_;
-	UI::Button increase_, decrease_;
+	void size_changed();
+	UI::Box box_horizontal_;
+	UI::Box box_vertical_;
+	UI::SpinBox sb_toolsize_;
 	uint32_t value_;
 };
 

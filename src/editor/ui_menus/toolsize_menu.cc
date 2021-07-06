@@ -34,37 +34,25 @@ EditorToolsizeMenu::EditorToolsizeMenu(EditorInteractive& parent,
                                        UI::UniqueWindow::Registry& registry)
    : UI::UniqueWindow(
         &parent, UI::WindowStyle::kWui, "toolsize_menu", &registry, 250, 50, _("Tool Size")),
-     textarea_(this,
-               UI::PanelStyle::kWui,
-               UI::FontStyle::kWuiLabel,
-               5,
-               10,
-               240,
-               10,
-               std::string(),
-               UI::Align::kCenter),
-     increase_(this,
-               "incr",
-               get_inner_w() / 2 - 10,
-               25,
-               20,
-               20,
-               UI::ButtonStyle::kWuiSecondary,
-               g_image_cache->get("images/ui_basic/scrollbar_up.png")),
-     decrease_(this,
-               "decr",
-               get_inner_w() / 2 + 10,
-               25,
-               20,
-               20,
-               UI::ButtonStyle::kWuiSecondary,
-               g_image_cache->get("images/ui_basic/scrollbar_down.png")),
-     value_(0) {
-	increase_.sigclicked.connect([this]() { increase_radius(); });
-	decrease_.sigclicked.connect([this]() { decrease_radius(); });
+     box_horizontal_(this, UI::PanelStyle::kFsMenu, 0, 0, UI::Box::Horizontal),
+     box_vertical_(&box_horizontal_, UI::PanelStyle::kFsMenu, 0, 0, UI::Box::Vertical),
+     sb_toolsize_(&box_vertical_,
+                  0,
+                  0,
+                  200,
+                  80,
+                  1,
+                  1,
+                  MAX_TOOL_AREA + 1,
+                  UI::PanelStyle::kFsMenu,
+                  _("Current Size:")),
 
-	increase_.set_repeating(true);
-	decrease_.set_repeating(true);
+     value_(0) {
+
+	box_horizontal_.add(&box_vertical_, UI::Box::Resizing::kAlign, UI::Align::kCenter);
+	box_vertical_.add(&sb_toolsize_, UI::Box::Resizing::kAlign, UI::Align::kCenter);
+	box_horizontal_.set_size(get_inner_w(), get_inner_h());
+	box_vertical_.set_size(get_inner_w(), get_inner_h());
 	update(parent.get_sel_radius());
 
 	if (eia().tools()->current().has_size_one()) {
@@ -74,27 +62,22 @@ EditorToolsizeMenu::EditorToolsizeMenu(EditorInteractive& parent,
 	if (get_usedefaultpos()) {
 		center_to_parent();
 	}
-
+	sb_toolsize_.changed.connect([this]() { size_changed(); });
 	initialization_complete();
 }
 
 void EditorToolsizeMenu::update(uint32_t const val) {
-	value_ = val;
-	eia().set_sel_radius(val);
-	set_buttons_enabled(true);
-	textarea_.set_text((boost::format(_("Current Size: %u")) % (val + 1)).str());
+	sb_toolsize_.set_value(val);
 }
 
-void EditorToolsizeMenu::set_buttons_enabled(bool enable) {
-	decrease_.set_enabled(enable && 0 < value_);
-	increase_.set_enabled(enable && value_ < MAX_TOOL_AREA);
+void EditorToolsizeMenu::size_changed() {
+	value_ = sb_toolsize_.get_value() - 1;
+	eia().set_sel_radius(value_);
 }
-
-void EditorToolsizeMenu::decrease_radius() {
-	assert(0 < eia().get_sel_radius());
-	update(eia().get_sel_radius() - 1);
-}
-void EditorToolsizeMenu::increase_radius() {
-	assert(eia().get_sel_radius() < MAX_TOOL_AREA);
-	update(eia().get_sel_radius() + 1);
+void EditorToolsizeMenu::set_buttons_enabled(bool enabled) {
+	if (enabled) {
+		sb_toolsize_.set_interval(1, MAX_TOOL_AREA + 1);
+	} else {
+		sb_toolsize_.set_interval(1, 1);
+	}
 }

@@ -880,6 +880,7 @@ void EditorInteractive::select_tool(EditorTool& primary, EditorTool::ToolIndex c
 			if (UI::UniqueWindow* const w = menu_windows_.toolsize.window) {
 				EditorToolsizeMenu& toolsize_menu = dynamic_cast<EditorToolsizeMenu&>(*w);
 				toolsize_menu.update(toolsize_menu.value());
+				toolsize_menu.set_buttons_enabled(true);
 			}
 		}
 		egbase().mutable_map()->recalc_whole_map(egbase());
